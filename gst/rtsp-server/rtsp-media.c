@@ -2952,7 +2952,7 @@ gst_rtsp_media_prepare (GstRTSPMedia * media, GstRTSPThread * thread)
   GST_INFO ("preparing media %p", media);
 
   /* reset some variables */
-  priv->is_live = FALSE;
+  priv->is_live = TRUE;
   priv->seekable = FALSE;
   priv->buffering = FALSE;
 

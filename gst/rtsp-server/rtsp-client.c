@@ -1547,6 +1547,25 @@ handle_play_request (GstRTSPClient * client, GstRTSPContext * ctx)
     if (gst_rtsp_range_parse (str, &range) == GST_RTSP_OK) {
       GstRTSPMediaStatus media_status;
 
+      if (range->min.type == GST_RTSP_TIME_SECONDS &&
+          range->min.seconds == 0 &&
+          range->max.type == GST_RTSP_TIME_END &&
+          range->max.seconds == 0) {
+
+        GST_WARNING ("fix range old %d, %f - %d, %f",
+            range->min.type, range->min.seconds,
+            range->max.type, range->max.seconds);
+
+        range->min.type = GST_RTSP_TIME_NOW;
+        range->min.seconds = -1;
+        range->max.type = GST_RTSP_TIME_END;
+        range->max.seconds = -1;
+
+        GST_WARNING ("fix range new %d, %f - %d, %f",
+            range->min.type, range->min.seconds,
+            range->max.type, range->max.seconds);
+      }
+
       /* we have a range, seek to the position */
       unit = range->unit;
       gst_rtsp_media_seek (media, range);
